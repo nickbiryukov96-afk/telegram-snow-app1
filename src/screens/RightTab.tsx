@@ -338,38 +338,6 @@ const PopupOverlay = styled.div<{ isOpen: boolean }>`
   display: ${props => props.isOpen ? 'block' : 'none'};
 `;
 
-const WriteLink = styled.a`
-  padding: 6px 12px;
-  background: transparent;
-  border: 1px solid rgba(33, 150, 243, 0.5);
-  border-radius: ${theme.borderRadius.small};
-  color: rgba(33, 150, 243, 0.9);
-  font-size: 12px;
-  font-weight: 500;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all ${theme.transitions.normal};
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  
-  &:hover {
-    background: rgba(33, 150, 243, 0.2);
-    border-color: rgba(33, 150, 243, 0.7);
-    color: rgba(33, 150, 243, 1);
-  }
-`;
-
-const WriteLinkContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 8px;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-`;
 
 const GiftDescription = styled.p`
   font-size: 13px;
@@ -491,7 +459,6 @@ const initialGifts: Gift[] = [
   }
 ];
 
-const STORAGE_KEY = 'selectedGifts';
 
 interface SelectedGiftInfo {
   userId: string;
