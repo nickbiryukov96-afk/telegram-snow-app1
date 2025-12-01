@@ -95,7 +95,7 @@ bot.onText(/\/start/, async (msg) => {
           inline_keyboard: [
             [
               {
-                text: '🎁 Открыть вишлист',
+                text: '🎁 Инфа по ДР',
                 web_app: {
                   url: MINI_APP_URL
                 }
