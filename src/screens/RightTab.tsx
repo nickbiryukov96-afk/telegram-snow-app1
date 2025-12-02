@@ -105,7 +105,7 @@ const WishlistContainer = styled.div`
   z-index: 1;
 `;
 
-const GiftItem = styled.div<{ selected?: boolean; disabled?: boolean; $extraPadding?: boolean }>`
+const GiftItem = styled.div<{ selected?: boolean; disabled?: boolean; $extraPadding?: boolean; $liftContent?: boolean }>`
   background: ${props => props.disabled 
     ? 'rgba(0, 0, 0, 0.4)' 
     : props.selected 
@@ -137,12 +137,15 @@ const GiftItem = styled.div<{ selected?: boolean; disabled?: boolean; $extraPadd
   `}
 `;
 
-const GiftContent = styled.div`
+const GiftContent = styled.div<{ $liftContent?: boolean }>`
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 12px;
   min-width: 0;
+  ${props => props.$liftContent && `
+    margin-top: -20px;
+  `}
 `;
 
 
@@ -607,7 +610,7 @@ const RightTab: React.FC = () => {
                     ? 'Недоступен' 
                     : 'Доступен'}
               </GiftStatus>
-              <GiftContent>
+              <GiftContent $liftContent={gift.id === 6}>
                 <GiftHeader>
                   <GiftTitleWrapper>
                     <GiftTitle>{gift.title}</GiftTitle>
