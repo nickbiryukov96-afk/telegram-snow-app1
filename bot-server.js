@@ -69,58 +69,67 @@ bot.onText(/\/start/, async (msg) => {
   }
   
   try {
-    // Используем прямой HTTP запрос к Telegram API для гарантии правильного формата
-    const requestBody = {
-      chat_id: chatId,
-      text: messageText,
-      reply_markup: replyMarkup
-    };
-    
     console.log('📤 Отправляю сообщение с web_app кнопкой...');
     console.log('🔗 URL мини-аппа:', MINI_APP_URL);
-    console.log('📋 Формат кнопки:', JSON.stringify(replyMarkup, null, 2));
+    console.log('📋 Chat ID:', chatId);
     
-    const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody)
-    });
-    
-    const result = await response.json();
-    
-    if (!result.ok) {
-      console.error('❌ Ошибка Telegram API:', JSON.stringify(result, null, 2));
-      throw new Error(result.description || 'Unknown error');
-    }
-    
-    console.log('✅ Сообщение с web_app кнопкой отправлено успешно');
-  } catch (error) {
-    console.error('❌ Ошибка при отправке сообщения:', error.message);
-    console.error('Детали ошибки:', error);
-    // Fallback: пытаемся еще раз с web_app кнопкой через библиотеку
-    try {
-      const fallbackOptions = {
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: 'Инфа по ДР',
-                web_app: {
-                  url: MINI_APP_URL
-                }
+    // Сначала пробуем через библиотеку (более надежно)
+    const options = {
+      reply_markup: {
+        inline_keyboard: [
+          [
+            {
+              text: 'Инфа по ДР',
+              web_app: {
+                url: MINI_APP_URL
               }
-            ]
+            }
           ]
-        }
+        ]
+      }
+    };
+    
+    const sentMessage = await bot.sendMessage(chatId, messageText, options);
+    console.log('✅ Сообщение отправлено успешно через библиотеку:', sentMessage.message_id);
+    
+  } catch (error) {
+    console.error('❌ Ошибка при отправке сообщения через библиотеку:', error.message);
+    console.error('Детали ошибки:', error);
+    
+    // Fallback: используем прямой HTTP запрос к Telegram API
+    try {
+      console.log('🔄 Пробую отправить через прямой API запрос...');
+      const requestBody = {
+        chat_id: chatId,
+        text: messageText,
+        reply_markup: replyMarkup
       };
-      await bot.sendMessage(chatId, messageText, fallbackOptions);
-      console.log('✅ Сообщение отправлено через fallback (библиотека)');
-    } catch (fallbackError) {
-      console.error('❌ Ошибка в fallback:', fallbackError);
-      // Последняя попытка - просто текст с инструкцией
-      bot.sendMessage(chatId, `${messageText}\n\n⚠️ Не удалось создать кнопку. Откройте мини-апп вручную: ${MINI_APP_URL}`);
+      
+      const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+      });
+      
+      const result = await response.json();
+      
+      if (!result.ok) {
+        console.error('❌ Ошибка Telegram API:', JSON.stringify(result, null, 2));
+        throw new Error(result.description || 'Unknown error');
+      }
+      
+      console.log('✅ Сообщение отправлено успешно через прямой API');
+    } catch (apiError) {
+      console.error('❌ Ошибка при отправке через прямой API:', apiError.message);
+      // Последняя попытка - просто текст без кнопки
+      try {
+        await bot.sendMessage(chatId, `${messageText}\n\n⚠️ Не удалось создать кнопку. Откройте мини-апп вручную: ${MINI_APP_URL}`);
+        console.log('✅ Отправлено простое сообщение без кнопки');
+      } catch (finalError) {
+        console.error('❌ КРИТИЧЕСКАЯ ОШИБКА: Не удалось отправить сообщение:', finalError.message);
+      }
     }
   }
 });
