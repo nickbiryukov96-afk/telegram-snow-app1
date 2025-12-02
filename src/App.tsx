@@ -39,22 +39,38 @@ function App() {
 
   // Сбрасываем скролл при переключении экранов
   useEffect(() => {
-    // Прокручиваем в начало страницы при изменении таба
+    // Прокручиваем в начало страницы при изменении таба (мгновенно, без анимации)
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: 'smooth'
+      behavior: 'instant'
     });
     
-    // Также прокручиваем корневой элемент на случай, если скролл там
+    // Также прокручиваем корневой элемент
     const rootElement = document.getElementById('root');
     if (rootElement) {
       rootElement.scrollTo({
         top: 0,
         left: 0,
-        behavior: 'smooth'
+        behavior: 'instant'
       });
     }
+    
+    // Прокручиваем все скроллируемые контейнеры внутри экранов
+    const scrollableContainers = document.querySelectorAll('[class*="Container"], [class*="container"]');
+    scrollableContainers.forEach((container) => {
+      if (container instanceof HTMLElement && container.scrollTop > 0) {
+        container.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'instant'
+        });
+      }
+    });
+    
+    // Дополнительно: прокручиваем body и html
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
   }, [currentTab]);
 
   useEffect(() => {
