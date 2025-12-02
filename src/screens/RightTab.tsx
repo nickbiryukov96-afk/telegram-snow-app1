@@ -354,6 +354,8 @@ const GiftImageWrapper = styled.div`
   border-radius: ${theme.borderRadius.small};
   overflow: hidden;
   box-shadow: ${theme.shadows.small};
+  margin-top: 40px;
+  align-self: flex-start;
 `;
 
 const GiftImage = styled.img`
