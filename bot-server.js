@@ -28,8 +28,11 @@ console.log('✅ Бот запущен и готов к работе!');
 
 // Обработчик команды /start
 bot.onText(/\/start/, async (msg) => {
+  console.log('📥 Получена команда /start от:', msg.from?.username || msg.from?.first_name, 'ID:', msg.from?.id);
+  console.log('📋 Полное сообщение:', JSON.stringify(msg, null, 2));
   const chatId = msg.chat.id;
   const firstName = msg.from?.first_name || 'друг';
+  console.log('💬 Chat ID:', chatId);
   
   // Используем прямой вызов Telegram Bot API для web_app кнопки
   // Формат согласно официальной документации Telegram Bot API
@@ -140,15 +143,25 @@ bot.on('polling_error', (error) => {
 
 // Обработчик всех сообщений (для отладки)
 bot.on('message', (msg) => {
+  console.log('📨 Получено сообщение:', msg.text, 'от:', msg.from?.username || msg.from?.first_name);
   // Игнорируем команды, которые уже обработаны
   if (msg.text?.startsWith('/')) {
+    console.log('⚠️ Команда начинается с /, но не обработана обработчиком onText');
     return;
   }
   
   // Можно добавить обработку обычных сообщений здесь
-  console.log('Получено сообщение:', msg.text);
 });
 
 console.log('🤖 Бот слушает команды...');
 console.log(`📱 Мини-апп URL: ${MINI_APP_URL}`);
+console.log(`🔑 Токен бота: ${BOT_TOKEN ? BOT_TOKEN.substring(0, 10) + '...' : 'НЕ НАЙДЕН!'}`);
+
+// Проверяем подключение к Telegram API
+bot.getMe().then((botInfo) => {
+  console.log(`✅ Бот подключен: @${botInfo.username} (${botInfo.first_name})`);
+}).catch((error) => {
+  console.error('❌ Ошибка подключения к Telegram API:', error.message);
+  console.error('Проверьте правильность BOT_TOKEN в .env файле');
+});
 
