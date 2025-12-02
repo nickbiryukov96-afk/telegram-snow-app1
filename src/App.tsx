@@ -48,11 +48,6 @@ function App() {
         return;
       }
       
-      // Проверяем, является ли устройство мобильным
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-                       (window.innerWidth <= 768) ||
-                       ('ontouchstart' in window);
-      
       // Устанавливаем цвета
       tg.setHeaderColor(theme.colors.darkBlue);
       tg.setBackgroundColor(theme.colors.darkBlue);
@@ -60,11 +55,34 @@ function App() {
       // Готовим WebApp
       tg.ready();
       
+      // Проверяем платформу через Telegram WebApp API (более надежно)
+      const platform = tg.platform || 'unknown';
+      const isMobile = platform === 'ios' || platform === 'android';
+      const isDesktop = platform === 'tdesktop' || platform === 'macos' || platform === 'web' || platform === 'weba';
+      
+      console.log('📱 Платформа:', platform, 'isMobile:', isMobile, 'isDesktop:', isDesktop);
+      
+      // Дополнительная проверка по User-Agent и размеру экрана
+      const userAgentCheck = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const screenCheck = window.innerWidth <= 768;
+      const touchCheck = 'ontouchstart' in window;
+      
+      // Если платформа не определена, используем дополнительные проверки
+      const finalIsMobile = isMobile || (platform === 'unknown' && (userAgentCheck || (screenCheck && touchCheck)));
+      const finalIsDesktop = isDesktop || (platform === 'unknown' && !finalIsMobile && window.innerWidth > 768);
+      
+      console.log('🔍 Финальная проверка - isMobile:', finalIsMobile, 'isDesktop:', finalIsDesktop);
+      
       // Функция для разворачивания на полный экран (только на мобильных)
       const tryExpand = () => {
         // На десктопе не разворачиваем на полный экран
-        if (!isMobile) {
+        if (finalIsDesktop) {
           console.log('🖥️ Десктоп: пропускаем разворачивание на полный экран');
+          return;
+        }
+        
+        if (!finalIsMobile) {
+          console.log('❓ Неизвестная платформа: пропускаем разворачивание');
           return;
         }
         
@@ -88,7 +106,7 @@ function App() {
       tryExpand();
       
       // Множественные попытки развернуть с разными задержками (только на мобильных)
-      if (isMobile) {
+      if (finalIsMobile) {
         const delays = [0, 10, 50, 100, 200, 500, 1000];
         delays.forEach((delay) => {
           setTimeout(() => {
@@ -98,7 +116,7 @@ function App() {
       }
       
       // При полной загрузке страницы (только на мобильных)
-      if (isMobile) {
+      if (finalIsMobile) {
         if (document.readyState === 'complete') {
           tg.expand();
         } else {
@@ -109,7 +127,7 @@ function App() {
       }
       
       // При изменении видимости страницы (только на мобильных)
-      if (isMobile) {
+      if (finalIsMobile) {
         document.addEventListener('visibilitychange', () => {
           if (!document.hidden && tg) {
             tg.expand();
