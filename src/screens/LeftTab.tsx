@@ -33,6 +33,8 @@ const Container = styled.div`
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 350px;
+  display: flex;
+  justify-content: center;
 `;
 
 const BackgroundPattern = styled.div<{ $isBlurred?: boolean }>`
@@ -92,12 +94,19 @@ const PageTitle = styled.h1<{ $isBlurred?: boolean }>`
 const TimelineContainer = styled.main`
   overflow: visible;
   width: 100%;
+  max-width: 393px;
   min-width: 393px;
   min-height: 852px;
   position: relative;
   padding-bottom: 400px;
   padding-top: 150px;
   margin-top: 100px;
+  margin-left: auto;
+  margin-right: auto;
+  
+  @media (min-width: 394px) {
+    max-width: 393px;
+  }
 `;
 
 const Overlay = styled.div<{ isActive: boolean }>`
@@ -498,7 +507,7 @@ const LeftTab: React.FC = () => {
       id: 4,
       date: "17 января",
       title: "Большой спуск",
-      description: 'Дневная катка на максимум удовольствия. Для опытных — фрирайд, если горы сказали "можно".',
+      description: 'Дневная катка на максимум удовольствия. Для опытных - фрирайд, если горы сказали "можно".',
       activities: {
         morning: 'Первые подъемы, охота за лучшим снегом.',
         day: 'Фрирайд для бывалых; остальным — карвинг и горячий чай.',
