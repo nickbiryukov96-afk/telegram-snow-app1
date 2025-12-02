@@ -37,6 +37,26 @@ const ScreenContainer = styled.div<{ active: boolean }>`
 function App() {
   const [currentTab, setCurrentTab] = useState<Tab>('home');
 
+  // Сбрасываем скролл при переключении экранов
+  useEffect(() => {
+    // Прокручиваем в начало страницы при изменении таба
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+    
+    // Также прокручиваем корневой элемент на случай, если скролл там
+    const rootElement = document.getElementById('root');
+    if (rootElement) {
+      rootElement.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    }
+  }, [currentTab]);
+
   useEffect(() => {
     // Настройка полноэкранного режима Telegram WebApp
     const initWebApp = () => {
