@@ -610,7 +610,7 @@ const RightTab: React.FC = () => {
                     ? 'Недоступен' 
                     : 'Доступен'}
               </GiftStatus>
-              <GiftContent $liftContent={gift.id === 6}>
+              <GiftContent $liftContent={gift.id === 7}>
                 <GiftHeader>
                   <GiftTitleWrapper>
                     <GiftTitle>{gift.title}</GiftTitle>
