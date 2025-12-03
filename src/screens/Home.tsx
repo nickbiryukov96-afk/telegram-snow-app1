@@ -883,7 +883,7 @@ const Home: React.FC = () => {
         <TopIcons>
           <IconButton onClick={handleWeatherClick} title="Прогноз погоды">
             <IconEmoji>{currentWeather.condition}</IconEmoji>
-            <WeatherTemp>{currentWeather.temp || 'прогноз'}</WeatherTemp>
+            <WeatherTemp>Прогноз</WeatherTemp>
           </IconButton>
           <IconButton onClick={handleWebcamClick} title="Веб-камеры">
             <IconEmoji>📹</IconEmoji>
