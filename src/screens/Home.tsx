@@ -882,7 +882,10 @@ const Home: React.FC = () => {
         <BackgroundPattern />
         <TopIcons>
           <IconButton onClick={handleWeatherClick} title="Прогноз погоды">
-            <IconEmoji>{currentWeather.condition}</IconEmoji>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              {currentWeather.temp && <WeatherTemp style={{ marginTop: 0 }}>{currentWeather.temp}°</WeatherTemp>}
+              <IconEmoji>{currentWeather.condition}</IconEmoji>
+            </div>
             <WeatherTemp>Прогноз</WeatherTemp>
           </IconButton>
           <IconButton onClick={handleWebcamClick} title="Веб-камеры">
